@@ -1,4 +1,5 @@
 import requests
+from urllib.request import urlopen
 import pydantic
 from bs4 import BeautifulSoup
 query = input("What are you looking for? ")
@@ -12,8 +13,13 @@ for url in urls:
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
 
-    # for link in soup.find_all('a'):
-    #     print(link.get('href'))
+    for link in soup.find_all('a'):
+        l = str(link.get('href'))
+        if 'ads' in l:
+            continue
+        else:
+            print(link.get('href'))
+
     print(url, r.status_code)
 
 
