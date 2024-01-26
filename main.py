@@ -15,7 +15,7 @@ for url in urls:
 
     for link in soup.find_all('a'):
         l = str(link.get('href'))
-        if 'ads' in l:
+        if ('ads' in l ) or 'http' not in l:
             continue
         else:
             print(link.get('href'))
