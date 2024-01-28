@@ -4,27 +4,33 @@ import pydantic
 from bs4 import BeautifulSoup
 query = input("What are you looking for? ")
 query = query.replace(" ", '+')
-URL: str = f"https://www.ebay.com/sch/i.html?_from=R40&_trksid=p4432023.m570.l1313&_nkw={query}&_sacat=0"
-URL1: str = f'https://www.amazon.ca/s?k={query}&ref=nb_sb_noss'
-URL2: str = f'https://www.biblio.com/search.php?stage=1&keyisbn={query}'
-URL3: str = f'https://www.libgen.is/search.php?req={query}&lg_topic=libgen&open=0&view=simple&res=25&phrase=1&column=def'
-urls = [ URL1,  URL3,URL2]
-file = open('ItemLinks.html', 'w')
+EBAY: str = f"https://www.ebay.com/sch/i.html?_from=R40&_trksid=p4432023.m570.l1313&_nkw={query}&_sacat=0"
+AMZN: str = f'https://www.amazon.ca/s?k={query}&ref=nb_sb_noss'
+BIBLIO: str = f'https://www.biblio.com/search.php?stage=1&keyisbn={query}'
+LIBGEN: str = f'https://www.libgen.is/search.php?req={query}&lg_topic=libgen&open=0&view=simple&res=25&phrase=1&column=def'
+urls = [EBAY, AMZN, BIBLIO, LIBGEN]
+file = open('ItemLinks.html', 'w', encoding='utf-8')
 queryLinks = []
 
 
 for url in urls:
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
-
-    for link in soup.find_all('a'):
-        l = str(link.get('href'))
-        if ('ads' in l ) or ('http' not in l) or ('library.bz'  in l) or ('mhut'  in l) or ('onion'  in l):
-            continue
-        elif (url == URL3) and(( 'phillm'  in l) or ('magzdb'  in l)):
-            continue
-        else:
-            queryLinks.append(link)
+    soup.encode('utf-8')
+    if url == EBAY:
+        for Ebaytag in soup.find_all('div', class_="s-item__info clearfix"):
+            for Ebaylink in Ebaytag.find_all_next('a', class_="s-item__link"):
+                queryLinks.append(Ebaylink)
+    else:
+        for link in soup.find_all('a'):
+            l = str(link.get('href'))
+            if ('ads' in l ) or ('http' not in l) or ('library.bz'  in l) or ('mhut'  in l) or ('onion'  in l):
+                continue
+            elif (url == LIBGEN) and(( 'phillm'  in l) or ('magzdb'  in l)):
+                continue
+            else:
+                link = link.encode('utf-8')
+                queryLinks.append(link)
 
     print(url, r.status_code)
 
