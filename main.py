@@ -9,10 +9,11 @@ AMZN: str = f'https://www.amazon.ca/s?k={query}&ref=nb_sb_noss'
 BIBLIO: str = f'https://www.biblio.com/search.php?stage=1&keyisbn={query}'
 LIBGEN: str = f'https://www.libgen.is/search.php?req={query}&lg_topic=libgen&open=0&view=simple&res=25&phrase=1&column=def'
 urls = [EBAY, AMZN, BIBLIO, LIBGEN]
+urlsCorps = ["EBAY"," AMZN", "BIBLIO"," LIBGEN"]
 file = open('ItemLinks.html', 'w', encoding='utf-8')
 queryLinks = []
-
-
+sourceCounter = 1
+linkCounter = 0
 for url in urls:
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
@@ -20,7 +21,8 @@ for url in urls:
     if url == EBAY:
         for Ebaytag in soup.find_all('div', class_="s-item__info clearfix"):
             for Ebaylink in Ebaytag.find_all_next('a', class_="s-item__link"):
-                queryLinks.append(Ebaylink)
+                linkCounter+=1
+                queryLinks.append((f"Ebay link #{linkCounter}", Ebaylink))
     else:
         for link in soup.find_all('a'):
             l = str(link.get('href'))
@@ -30,7 +32,8 @@ for url in urls:
                 continue
             else:
                 link = link.encode('utf-8')
-                queryLinks.append(link)
+                linkCounter+=1
+                queryLinks.append((f"{urlsCorps[sourceCounter]} link #{linkCounter}" ,link))
 
     print(url, r.status_code)
 
