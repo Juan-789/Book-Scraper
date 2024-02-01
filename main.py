@@ -17,7 +17,7 @@ linkCounter = 0
 for url in urls:
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
-    soup.encode('utf-8')
+
     if url == EBAY:
         for Ebaytag in soup.find_all('div', class_="s-item__info clearfix"):
             for Ebaylink in Ebaytag.find_all_next('a', class_="s-item__link"):
@@ -31,7 +31,6 @@ for url in urls:
             elif (url == LIBGEN) and(( 'phillm'  in l) or ('magzdb'  in l)):
                 continue
             else:
-                link = link.encode('utf-8')
                 linkCounter+=1
                 queryLinks.append((f"{urlsCorps[sourceCounter]} link #{linkCounter}" ,link))
 
