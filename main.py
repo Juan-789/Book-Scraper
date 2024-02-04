@@ -4,6 +4,11 @@ import pydantic
 from bs4 import BeautifulSoup
 
 def main()->str:
+    """
+    retrieves links and its number for whatever the query is...
+    Suggested are books!!!!!!
+    :return:
+    """
     query = input("What are you looking for? ")
     query = query.replace(" ", '+')
     EBAY: str = f"https://www.ebay.com/sch/i.html?_from=R40&_trksid=p4432023.m570.l1313&_nkw={query}&_sacat=0"
